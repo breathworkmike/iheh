@@ -43,7 +43,7 @@ If you have questions, feedback, or just want to share how the tool helped you, 
 
 This tool is completely free to use. If it's helped you and you'd like to support its development and keep it free for others, you can buy me a coffee:
 
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support%20this%20work-yellow)](https://buymeacoffee.com/breathworkmike)
+[![Support on Ko-fi](https://img.shields.io/badge/Support%20me-Ko--fi-FF5E5B)](https://ko-fi.com/breathworkmike)
 
 Every contribution helps me keep creating free tools and resources for the breathwork community. Thank you.
 
