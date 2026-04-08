@@ -66,3 +66,5 @@ For commercial use enquiries, please get in touch: breathworkmike@gmail.com
 ---
 
 *Made with intention. Breathe well.*
+
+Big Love! Mike
