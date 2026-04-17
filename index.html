@@ -78,7 +78,50 @@ body{
 .intro-logo{
   font-family:var(--font-logo);font-weight:800;
   font-size:clamp(3.2rem,11vw,5rem);letter-spacing:-0.05em;color:var(--text);
+  display:block;line-height:1;text-align:center;
   animation:fadeUp 1s ease 0.2s both;
+}
+/* Block is position:relative so byline can be placed absolutely under the 'e' */
+.intro-logo-wrap{display:flex;flex-direction:column;align-items:center;}
+.intro-logo-block{
+  position:relative;
+  animation:fadeUp 1s ease 0.2s both;
+}
+/* 'i' and 'h' together ≈ 1.06em at this weight/tracking, so 'e' left edge ≈ 1.06 × font-size from the block left */
+.intro-byline{
+  position:absolute;
+  top:100%;
+  left:calc(clamp(3.2rem,11vw,5rem) * 1.06);
+  font-family:var(--font-body);font-size:clamp(0.65rem,2vw,0.78rem);
+  font-weight:400;letter-spacing:0.06em;color:var(--muted);
+  margin-top:0.22rem;white-space:nowrap;
+}
+.intro-byline strong{font-weight:700;}
+/* Spacer so the absolutely-positioned byline doesn't overlap the tagline below */
+.intro-byline-spacer{height:calc(clamp(0.65rem,2vw,0.78rem) * 1.6 + 0.22rem);}
+
+/* Shimmer tagline — gradient sweeps left-to-right, green starts at ~55% ("breath" position) */
+@keyframes shimmer{
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+.intro-tagline{
+  font-family:var(--font-logo);
+  font-size:clamp(1.15rem,4vw,1.65rem);
+  font-weight:800;letter-spacing:-0.03em;
+  background: linear-gradient(
+    90deg,
+    var(--text) 0%,
+    var(--text) 38%,
+    var(--teal) 55%,
+    rgba(var(--teal-rgb),0.6) 65%,
+    var(--text) 80%,
+    var(--text) 100%
+  );
+  background-size: 250% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation: fadeUp 1s ease 0.45s both, shimmer 4s linear 1.5s infinite;
+  margin-top:0.3rem;text-align:center;
 }
 .intro-quote{
   font-family:var(--font-heading);font-style:normal;font-weight:300;
@@ -108,13 +151,23 @@ body{
 }
 .page.visible{opacity:1;}
 
-.header{text-align:center;}
+.header{text-align:center;display:flex;flex-direction:column;align-items:center;}
 .logo{
   font-family:var(--font-logo);font-size:clamp(2rem,7vw,3rem);font-weight:800;letter-spacing:-0.05em;
   background:linear-gradient(135deg,var(--text) 40%,var(--teal) 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:block;line-height:1;text-align:center;
 }
-.tagline{margin-top:0.3rem;font-size:0.63rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);}
+/* logo-block: position:relative so byline absolute-positions under the 'e' */
+.logo-block{position:relative;margin-bottom:calc(0.18rem + 0.6rem + 0.35rem);}
+.page-byline{
+  position:absolute;top:100%;
+  left:calc(clamp(2rem,7vw,3rem) * 1.06);
+  font-family:var(--font-body);font-size:0.6rem;font-weight:400;
+  letter-spacing:0.06em;color:var(--muted);margin-top:0.04rem;white-space:nowrap;
+}
+.page-byline strong{font-weight:700;}
+.tagline{font-size:0.63rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);margin-top:1.2rem;margin-bottom:0.6rem;}
 
 /* PRESETS */
 .presets{display:flex;gap:0.4rem;flex-wrap:wrap;justify-content:center;max-width:390px;}
@@ -211,9 +264,47 @@ input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.2);}
 .btn{flex:1;padding:0.85rem 1rem;border:1px solid var(--border);border-radius:100px;background:transparent;color:var(--muted);font-family:var(--font-body);font-size:0.7rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;cursor:pointer;transition:all 0.22s ease;}
 .btn:hover{background:var(--soft);}
 .btn:disabled{opacity:0.3;cursor:default;}
-.btn.primary{background:linear-gradient(135deg,rgba(var(--teal-rgb),0.18),rgba(var(--teal-rgb),0.08));border-color:rgba(var(--teal-rgb),0.5);color:var(--teal);}
-.btn.primary:hover:not(:disabled){background:linear-gradient(135deg,rgba(var(--teal-rgb),0.28),rgba(var(--teal-rgb),0.14));box-shadow:0 4px 30px rgba(var(--teal-rgb),0.16);transform:translateY(-1px);}
+.btn.primary{
+  background:linear-gradient(135deg,rgba(var(--teal-rgb),0.88),rgba(var(--teal-rgb),0.68));
+  border-color:rgba(var(--teal-rgb),0.9);
+  color:#fff;
+  font-weight:700;
+  box-shadow:0 4px 22px rgba(var(--teal-rgb),0.28),0 1px 0 rgba(255,255,255,0.12) inset;
+  text-shadow:0 1px 2px rgba(0,0,0,0.18);
+}
+.btn.primary:hover:not(:disabled){
+  background:linear-gradient(135deg,rgba(var(--teal-rgb),1),rgba(var(--teal-rgb),0.82));
+  box-shadow:0 6px 36px rgba(var(--teal-rgb),0.38),0 1px 0 rgba(255,255,255,0.15) inset;
+  transform:translateY(-2px);
+}
+.btn.primary:active:not(:disabled){transform:translateY(0);box-shadow:0 2px 12px rgba(var(--teal-rgb),0.22);}
 .status-line{font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);min-height:1em;text-align:center;}
+
+/* COUNTDOWN OVERLAY */
+.countdown-overlay{
+  position:fixed;inset:0;z-index:350;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1rem;
+  background:rgba(var(--text-rgb),0.45);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity 0.3s ease,visibility 0.3s ease;
+}
+.countdown-overlay.show{opacity:1;visibility:visible;pointer-events:all;}
+.countdown-num{
+  font-family:var(--font-heading);font-size:clamp(6rem,22vw,9rem);font-weight:800;
+  color:#fff;line-height:1;
+  animation:countPop 0.5s cubic-bezier(0.22,1,0.36,1) both;
+  text-shadow:0 4px 40px rgba(var(--teal-rgb),0.55);
+}
+.countdown-label{
+  font-size:0.72rem;font-weight:600;letter-spacing:0.28em;text-transform:uppercase;
+  color:rgba(255,255,255,0.65);
+}
+@keyframes countPop{
+  from{opacity:0;transform:scale(1.5);}
+  to{opacity:1;transform:scale(1);}
+}
 
 /* BRAND BADGE */
 .brand-badge{
@@ -273,7 +364,7 @@ input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.2);}
 .affirmation-overlay{
   position:fixed;inset:0;z-index:400;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:2.8rem;
+  gap:1.4rem;
   background:var(--bg);
   padding:2rem;padding-top:calc(2rem + var(--sat));padding-bottom:calc(2rem + var(--sab));
   opacity:0;visibility:hidden;pointer-events:none;
@@ -283,13 +374,25 @@ input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.2);}
 
 .aff-iheh{
   font-family:var(--font-logo);font-size:clamp(3.2rem,11vw,5rem);font-weight:800;
-  letter-spacing:-0.05em;color:var(--text);
+  letter-spacing:-0.05em;color:var(--text);display:block;line-height:1;text-align:center;
   animation:fadeUp 0.8s ease 0.1s both;
 }
+.aff-title-wrap{display:flex;flex-direction:column;align-items:center;}
+.aff-title-block{position:relative;}
+.aff-byline{
+  position:absolute;top:100%;
+  left:calc(clamp(3.2rem,11vw,5rem) * 1.06);
+  font-family:var(--font-body);font-size:clamp(0.65rem,2vw,0.78rem);
+  font-weight:400;letter-spacing:0.06em;color:var(--muted);margin-top:0.22rem;white-space:nowrap;
+  animation:fadeUp 0.8s ease 0.18s both;
+}
+.aff-byline strong{font-weight:700;}
+.aff-byline-spacer{height:calc(clamp(0.65rem,2vw,0.78rem) * 1.6 + 0.22rem);}
 .aff-done-label{
   font-size:0.65rem;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;
   color:var(--teal);opacity:0.75;
   animation:fadeUp 0.8s ease 0.2s both;
+  margin-top:-0.4rem;
 }
 .aff-orb{
   width:90px;height:90px;border-radius:50%;
@@ -371,6 +474,17 @@ input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.2);}
 /* ── FOCUS OVERLAY ──────────────────────────────── */
 .focus{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:2rem;padding-top:var(--sat);padding-bottom:var(--sab);}
 .focus.on{display:flex;}
+.focus-logo{font-family:var(--font-logo);font-size:clamp(3.2rem,11vw,5rem);font-weight:800;letter-spacing:-0.05em;color:var(--text);display:block;line-height:1;text-align:center;}
+.focus-logo-wrap{display:flex;flex-direction:column;align-items:center;}
+.focus-logo-block{position:relative;}
+.focus-byline{
+  position:absolute;top:100%;
+  left:calc(clamp(3.2rem,11vw,5rem) * 1.06);
+  font-family:var(--font-body);font-size:clamp(0.65rem,2vw,0.78rem);
+  font-weight:400;letter-spacing:0.06em;color:var(--muted);margin-top:0.22rem;white-space:nowrap;
+}
+.focus-byline strong{font-weight:700;}
+.focus-byline-spacer{height:calc(clamp(0.65rem,2vw,0.78rem) * 1.6 + 0.22rem);}
 .focus-exit{background:transparent;border:1px solid var(--border);border-radius:100px;color:var(--muted);font-family:var(--font-body);font-size:0.6rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;padding:0.42rem 1rem;cursor:pointer;transition:all 0.2s;}
 .focus-exit:hover{color:var(--text);}
 .focus-logo{font-family:var(--font-logo);font-size:clamp(3.2rem,11vw,5rem);font-weight:800;letter-spacing:-0.05em;color:var(--text);}
@@ -401,12 +515,38 @@ input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.2);}
 .burst.show .burst-ring:nth-child(3){animation-delay:0.3s;border-color:var(--pink);}
 @keyframes burstRing{0%{transform:scale(0.3);opacity:0.8;}100%{transform:scale(3.5);opacity:0;}}
 
+/* STREAK BADGE */
+.streak-badge{
+  display:flex;align-items:center;gap:0.42rem;
+  background:var(--card);border:1px solid var(--border);border-radius:100px;
+  padding:0.32rem 0.85rem;font-size:0.62rem;font-weight:600;
+  letter-spacing:0.1em;color:var(--muted);
+  transition:all 0.3s ease;
+}
+.streak-badge.lit{border-color:rgba(var(--teal-rgb),0.4);color:var(--teal);background:var(--teal-dim);}
+.streak-flame{font-size:0.95rem;line-height:1;}
+
+/* AMBIENT SOUND BTN active state - kept for keyboard shortcut ref */
+
+/* POST-SESSION STATS in affirmation */
+.aff-session-stats{
+  display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;
+  margin-top:-0.3rem;
+}
+.aff-stat-item{
+  display:flex;flex-direction:column;align-items:center;gap:0.18rem;
+}
+.aff-stat-num{font-family:var(--font-heading);font-size:1.5rem;font-weight:700;color:var(--teal);line-height:1;}
+.aff-stat-lbl{font-size:0.52rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
+.aff-stat-sep{width:1px;height:36px;background:var(--border);align-self:center;}
+
 /* ── BREATHING TIPS ─────────────────────────────── */
 .tips-toggle{
   background:transparent;border:1px solid var(--border);border-radius:100px;
   color:var(--muted);font-family:var(--font-body);font-size:0.62rem;font-weight:500;
   letter-spacing:0.14em;text-transform:uppercase;padding:0.4rem 1.1rem;
   cursor:pointer;transition:all 0.22s ease;display:flex;align-items:center;gap:0.45rem;
+  margin-top:-1.2rem;
 }
 .tips-toggle:hover{background:var(--soft);color:var(--text);}
 .tips-toggle.open{background:var(--soft);color:var(--text);border-color:rgba(var(--teal-rgb),0.35);}
@@ -436,6 +576,48 @@ input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.2);}
   border-top:1px solid var(--border);
   font-size:0.67rem;font-weight:400;color:var(--muted);line-height:1.7;
 }
+.tips-shortcuts{
+  margin-top:0.85rem;padding-top:0.75rem;
+  border-top:1px solid var(--border);
+  display:flex;flex-direction:column;gap:0.42rem;
+}
+.tips-shortcuts-title{
+  font-size:0.58rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:0.2rem;
+}
+.tips-shortcut-row{
+  display:flex;align-items:center;gap:0.7rem;
+  font-size:0.68rem;color:var(--text);
+}
+.tips-shortcut-row span{color:var(--muted);font-size:0.66rem;}
+kbd{
+  font-family:var(--font-body);font-size:0.58rem;font-weight:700;
+  background:var(--bg);border:1px solid var(--border);border-radius:5px;
+  padding:0.15rem 0.45rem;color:var(--teal);letter-spacing:0.05em;
+  box-shadow:0 1px 0 var(--border);min-width:1.8rem;text-align:center;
+  display:inline-block;
+}
+
+.preset-guide-panel .preset-guide-body{
+  font-size:0.71rem;font-weight:400;line-height:1.75;color:var(--text);
+  margin-bottom:0.75rem;
+}
+.preset-guide-panel .preset-guide-body:last-of-type{margin-bottom:0;}
+.preset-guide-panel .preset-guide-body a{
+  color:var(--teal);text-decoration:none;font-weight:500;
+  border-bottom:1px solid rgba(var(--teal-rgb),0.3);padding-bottom:1px;
+  transition:opacity 0.2s;
+}
+.preset-guide-panel .preset-guide-body a:hover{opacity:0.7;}
+.preset-guide-signoff{
+  margin-top:1rem;padding-top:0.85rem;
+  border-top:1px solid var(--border);
+  font-family:var(--font-heading);font-style:italic;font-weight:400;
+  font-size:0.78rem;line-height:1.8;
+  color:var(--teal);padding-left:1rem;
+  border-left:2px solid rgba(var(--teal-rgb),0.35);
+}
+
 .tips-footer-note a{color:var(--teal);text-decoration:none;font-weight:500;transition:opacity 0.2s;}
 .tips-footer-note a:hover{opacity:0.65;}
 
@@ -533,16 +715,55 @@ function toggleTheme() {
 <!-- ══ INTRO ══════════════════════════════════════ -->
 <div class="intro" id="intro">
   <div class="intro-orb"></div>
-  <div class="intro-logo">iheh</div>
+  <div class="intro-logo-wrap">
+    <div class="intro-logo-block">
+      <span class="intro-logo">iheh</span>
+      <span class="intro-byline">By Breathwork<strong>Mike</strong></span>
+    </div>
+  </div>
+  <div class="intro-byline-spacer"></div>
+  <div class="intro-tagline">Your personal breath trainer</div>
   <div class="intro-quote">Every breath is a chance to start again.</div>
   <button class="intro-btn" id="introBtn">Begin Your Practice</button>
 </div>
 
 <!-- ══ AFFIRMATION OVERLAY ════════════════════════ -->
 <div class="affirmation-overlay" id="affOverlay">
-  <div class="aff-iheh">iheh</div>
+  <div class="aff-title-wrap">
+    <div class="aff-title-block">
+      <div class="aff-iheh">iheh</div>
+      <div class="aff-byline">By Breathwork<strong>Mike</strong></div>
+    </div>
+    <div class="aff-byline-spacer"></div>
+  </div>
   <div class="aff-done-label">Session Complete</div>
   <div class="aff-orb"></div>
+  <div class="aff-session-stats" id="affStats">
+    <div class="aff-stat-item">
+      <div class="aff-stat-num" id="affStatCycles">—</div>
+      <div class="aff-stat-lbl">Cycles</div>
+    </div>
+    <div class="aff-stat-sep"></div>
+    <div class="aff-stat-item">
+      <div class="aff-stat-num" id="affStatMins">—</div>
+      <div class="aff-stat-lbl">Minutes</div>
+    </div>
+    <div class="aff-stat-sep"></div>
+    <div class="aff-stat-item">
+      <div class="aff-stat-num" id="affStatBPM">—</div>
+      <div class="aff-stat-lbl">Avg BPM</div>
+    </div>
+    <div class="aff-stat-sep"></div>
+    <div class="aff-stat-item">
+      <div class="aff-stat-num" id="affStatReduction">—<span style="font-size:1rem">%</span></div>
+      <div class="aff-stat-lbl">vs Normal</div>
+    </div>
+    <div class="aff-stat-sep"></div>
+    <div class="aff-stat-item">
+      <div class="aff-stat-num" id="affStatStreak">—</div>
+      <div class="aff-stat-lbl">Day Streak</div>
+    </div>
+  </div>
   <div class="aff-quote-wrap">
     <span class="aff-quote" id="affQuote"></span>
     <span class="aff-attr" id="affAttr"></span>
@@ -558,7 +779,7 @@ function toggleTheme() {
       <a class="brand-badge-name" href="https://instagram.com/breathworkmike" target="_blank" rel="noopener">By Breathwork<strong>Mike</strong></a>
     </div>
     <p class="aff-support-line">
-      If this helped you breathe easier, please consider <a href="https://ko-fi.com/breathworkmike" target="_blank" rel="noopener">buying me a coffee</a> ☕
+      If this helped you breathe easier, please consider <a href="https://ko-fi.com/breathworkmike" target="_blank" rel="noopener">a tip via Ko-fi</a> or <a href="https://paypal.me/mikeditchfield" target="_blank" rel="noopener">PayPal Me</a> ☕
     </p>
     <a class="aff-insta" href="https://instagram.com/breathworkmike" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -575,7 +796,10 @@ function toggleTheme() {
 <!-- ══ MAIN PAGE ══════════════════════════════════ -->
 <div class="page" id="mainPage">
   <div class="header">
-    <div class="logo">iheh</div>
+    <div class="logo-block">
+      <div class="logo">iheh</div>
+      <div class="page-byline">By Breathwork<strong>Mike</strong></div>
+    </div>
     <div class="tagline">Inhale · Hold · Exhale · Hold</div>
   </div>
 
@@ -587,7 +811,7 @@ function toggleTheme() {
   <div class="tips-panel" id="tipsPanel">
     <ul class="tips-list">
       <li><strong>Breathe through your nose</strong> — It helps slow things down and supports calm, steady breathing.</li>
-      <li><strong>Let the breath drop into your belly</strong> — Your stomach should gently rise as you inhale, and fall as you exhale.</li>
+      <li><strong>Let the breath drop into your belly</strong> — Your stomach should gently rise as you inhale and fall as you exhale.</li>
       <li><strong>Go at your own pace</strong> — If a pattern feels too long or intense, shorten it. Your breath, your rhythm.</li>
       <li><strong>No strain, no force</strong> — Breathing should feel smooth and comfortable, not like a challenge.</li>
       <li><strong>Consistency over perfection</strong> — A few minutes each day is more powerful than one long session.</li>
@@ -597,6 +821,28 @@ function toggleTheme() {
     <p class="tips-footer-note">
       If you'd like to go deeper, contact <a href="mailto:breathworkmike@gmail.com">breathworkmike@gmail.com</a> for a one-to-one session. You can also connect here: <a href="https://instagram.com/breathworkmike" target="_blank" rel="noopener">instagram.com/breathworkmike</a>
     </p>
+    <div class="tips-shortcuts">
+      <div class="tips-shortcuts-title">Keyboard Shortcuts</div>
+      <div class="tips-shortcut-row"><kbd>Space</kbd><span>Begin session</span></div>
+      <div class="tips-shortcut-row"><kbd>R</kbd><span>Reset</span></div>
+      <div class="tips-shortcut-row"><kbd>F</kbd><span>Toggle focus mode</span></div>
+      <div class="tips-shortcut-row"><kbd>M</kbd><span>Toggle sound on / off</span></div>
+    </div>
+  </div>
+
+  <button class="tips-toggle preset-guide-toggle" id="presetGuideToggle">
+    Which Preset To Select?
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
+
+  <div class="tips-panel preset-guide-panel" id="presetGuidePanel">
+    <p class="preset-guide-body">Hi! We breathe between 20–25,000 breaths per day. We have between 5–7,000 thoughts per day. Consciously slow breathing is a gateway to slowing everything down.</p>
+    <p class="preset-guide-body">The breathing practices shared in this app are all grounded in the same ethos: <strong>slow it down, breathe through the nose and breathe into the diaphragm.</strong> Those shifts alone begin to settle the nervous system. From there, the pattern you choose can gently steer the effect. Steady, even rhythms can bring balance and focus. Longer exhales can help you soften and unwind. More structured patterns, like box breathing, can give the mind something solid to hold onto when things feel a bit wobbly.</p>
+    <p class="preset-guide-body">But here's the important bit; not all slow breathing feels the same for everyone. Some people find long breath holds uncomfortable, even a bit edgy. Others feel safer with structure. Some bodies melt with a long exhale, while others prefer an even, symmetrical rhythm.</p>
+    <p class="preset-guide-body">The "best" method is going to be the one your body actually relaxes into. Think of them all as different flavours of herbal teas, or your favourite treat. It's nice to have a variety of things to try.</p>
+    <p class="preset-guide-body">My thoughts; try what works well for you, and once you're settled with that, try something new… Maybe go a bit longer with any step of the <strong>iheh</strong> process (inhale-hold-exhale-hold).</p>
+    <p class="preset-guide-body">I hope <strong>iheh</strong> helps you be able to slow down and connect with the absolute wonder that is your breath. Please share with anyone you think could benefit from it. And please consider <a href="https://ko-fi.com/breathworkmike" target="_blank" rel="noopener">a tip via Ko-fi</a> or <a href="https://paypal.me/mikeditchfield" target="_blank" rel="noopener">PayPal Me</a>, or working with me <a href="mailto:breathworkmike@gmail.com">1-on-1 for breathwork coaching</a>, or breathe-led life coaching.</p>
+    <p class="preset-guide-signoff">Big Love, Breathe Easy.<br>Breathwork<strong>Mike</strong></p>
   </div>
 
   <div class="presets">
@@ -622,6 +868,12 @@ function toggleTheme() {
       <div class="orb-number" id="orbNum">—</div>
     </div>
   </div>
+
+  <div class="btn-row">
+    <button class="btn primary" id="btnStart">Begin</button>
+    <button class="btn" id="btnReset">Reset</button>
+  </div>
+  <div class="status-line" id="statusLine"></div>
 
   <div class="pips">
     <div class="pip" data-p="0"><div class="pip-dot"></div><div class="pip-label">In</div></div>
@@ -662,10 +914,11 @@ function toggleTheme() {
       <input type="number" class="dur-number" id="durNum" value="6" min="1" max="999">
     </div>
     <div class="icon-btns">
-      <button class="icon-btn on" id="soundBtn">🔔</button>
+      <button class="icon-btn on" id="soundStyleBtn" title="Sound on/off">🎵</button>
       <button class="icon-btn" id="focusBtn">⛶</button>
     </div>
   </div>
+
 
   <div class="stats-row">
     <div class="stat-card">
@@ -684,18 +937,17 @@ function toggleTheme() {
     </div>
   </div>
 
-  <div class="btn-row">
-    <button class="btn primary" id="btnStart">Begin</button>
-    <button class="btn" id="btnReset">Reset</button>
+  <div class="streak-badge" id="streakBadge">
+    <span class="streak-flame">🔥</span>
+    <span id="streakText">Start your streak today</span>
   </div>
-  <div class="status-line" id="statusLine"></div>
 
   <div class="brand-badge">
     <img src="data:image/png;base64,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" alt="BreathworkMike logo"/>
     <a class="brand-badge-name" href="https://instagram.com/breathworkmike" target="_blank" rel="noopener">By Breathwork<strong>Mike</strong></a>
   </div>
   <div class="support-line">
-    If this helped you breathe easier, please consider <a href="https://ko-fi.com/breathworkmike" target="_blank" rel="noopener">buying me a coffee</a> ☕
+    If this helped you breathe easier, please consider <a href="https://ko-fi.com/breathworkmike" target="_blank" rel="noopener">a tip via Ko-fi</a> or <a href="https://paypal.me/mikeditchfield" target="_blank" rel="noopener">PayPal Me</a> ☕
   </div>
 
   <div class="footer">
@@ -711,9 +963,21 @@ function toggleTheme() {
   </div>
 </div>
 
+<!-- ══ COUNTDOWN OVERLAY ══════════════════════════ -->
+<div class="countdown-overlay" id="countdownOverlay">
+  <div class="countdown-num" id="countdownNum">5</div>
+  <div class="countdown-label" id="countdownLabel">Exhale your breath and get ready to inhale</div>
+</div>
+
 <!-- ══ FOCUS ══════════════════════════════════════ -->
 <div class="focus" id="focusOverlay">
-  <div class="focus-logo">iheh</div>
+  <div class="focus-logo-wrap">
+    <div class="focus-logo-block">
+      <div class="focus-logo">iheh</div>
+      <div class="focus-byline">By Breathwork<strong>Mike</strong></div>
+    </div>
+    <div class="focus-byline-spacer"></div>
+  </div>
   <div class="fs-orb-scene" id="fsScene">
     <div class="fs-ring fs-ring-1"></div>
     <div class="fs-ring fs-ring-2"></div>
@@ -790,6 +1054,47 @@ document.getElementById('affClose').addEventListener('click', () => {
   document.getElementById('affOverlay').classList.remove('show');
   reset();
 });
+
+// ══ STREAK & SESSION HISTORY ═══════════════════════════════════════
+function getTodayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function loadStreak() {
+  try {
+    const raw = localStorage.getItem('iheh_streak');
+    return raw ? JSON.parse(raw) : { count: 0, lastDay: null };
+  } catch(e) { return { count: 0, lastDay: null }; }
+}
+function saveStreak(s) {
+  try { localStorage.setItem('iheh_streak', JSON.stringify(s)); } catch(e) {}
+}
+function recordSession() {
+  const today = getTodayKey();
+  const s = loadStreak();
+  if (s.lastDay === today) return s; // already logged today
+  const yesterday = (() => {
+    const d = new Date(); d.setDate(d.getDate()-1);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  })();
+  s.count = (s.lastDay === yesterday) ? s.count + 1 : 1;
+  s.lastDay = today;
+  saveStreak(s);
+  return s;
+}
+function renderStreak() {
+  const s = loadStreak();
+  const badge = document.getElementById('streakBadge');
+  const txt   = document.getElementById('streakText');
+  if (s.count >= 1) {
+    badge.classList.add('lit');
+    txt.textContent = s.count === 1 ? '1 day streak — keep going!' : `${s.count} day streak 🔥`;
+  } else {
+    badge.classList.remove('lit');
+    txt.textContent = 'Start your streak today';
+  }
+}
+renderStreak();
 
 // ══ INTRO ══════════════════════════════════════════════════════════
 document.getElementById('introBtn').addEventListener('click', () => {
@@ -881,45 +1186,65 @@ function calcCycles() {
 
 // ══ AUDIO ══════════════════════════════════════════════════════════
 let actx = null, soundOn = true;
-document.getElementById('soundBtn').addEventListener('click', () => {
+// Sound on/off toggle (🎵 button = sine tones enabled, 🔇 = tones off)
+let soundStyle = 'sine'; // 'sine' or 'off'
+
+// Sound toggle — 🎵 on / 🔇 off
+document.getElementById('soundStyleBtn').addEventListener('click', () => {
   soundOn = !soundOn;
-  const b = document.getElementById('soundBtn');
+  const b = document.getElementById('soundStyleBtn');
   b.classList.toggle('on', soundOn);
-  b.textContent = soundOn ? '🔔' : '🔕';
+  b.textContent = soundOn ? '🎵' : '🔇';
 });
 
-function tone(freq, dur, vol=0.13, delay=0) {
+function ensureAudio() {
+  if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+
+// Pure sine tone — simple, clean
+function sineTone(freq, dur, vol=1.0, delay=0) {
   if (!soundOn) return;
   try {
-    if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
-    const o = actx.createOscillator(), g = actx.createGain();
-    o.connect(g); g.connect(actx.destination);
+    const ctx = ensureAudio();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
     o.type = 'sine'; o.frequency.value = freq;
-    const t = actx.currentTime + delay;
+    const t = ctx.currentTime + delay;
     g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(vol, t + 0.06);
+    g.gain.linearRampToValueAtTime(vol, t + 0.04);
     g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-    o.start(t); o.stop(t + dur);
+    o.start(t); o.stop(t + dur + 0.01);
   } catch(e) {}
 }
 
+function tone(freq, dur, vol=1.0, delay=0) {
+  if (!soundOn || soundStyle === 'off') return;
+  sineTone(freq, dur, vol, delay);
+}
+
+const COUNTDOWN_FREQS = { 5: 493.88, 4: 466.16, 3: 440.00, 2: 415.30, 1: 392.00 };
+function countdownTone(n) {
+  if (!soundOn || soundStyle === 'off') return;
+  sineTone(COUNTDOWN_FREQS[n] || 440, 0.35, 0.85);
+}
+
 function playCelebration() {
-  // Four phase tones ascending, quick & calming
-  tone(396, 0.55, 0.12, 0.0);
-  tone(440, 0.55, 0.12, 0.2);
-  tone(528, 0.65, 0.14, 0.4);
-  tone(660, 1.1,  0.12, 0.6);
+  tone(396, 0.55, 0.9, 0.0);
+  tone(440, 0.55, 0.9, 0.2);
+  tone(528, 0.65, 1.0, 0.4);
+  tone(660, 1.1,  0.9, 0.6);
 }
 
 const TONES = {
-  inhale: () => tone(528, 0.5,  0.13),
-  hold1:  () => tone(440, 0.4,  0.08),
-  exhale: () => tone(396, 0.6,  0.13),
-  hold2:  () => tone(330, 0.4,  0.08),
+  inhale: () => tone(528, 0.5,  1.0),
+  hold1:  () => tone(440, 0.4,  0.75),
+  exhale: () => tone(396, 0.6,  1.0),
+  hold2:  () => tone(330, 0.4,  0.75),
   done:   playCelebration,
 };
 
-// ══ FOCUS MODE ═════════════════════════════════════════════════════
 let focusOn = false;
 document.getElementById('focusBtn').addEventListener('click', () => {
   focusOn = true;
@@ -947,6 +1272,11 @@ const PHASES = [
 ];
 let D = {label:'Ready',num:'—',pip:-1,status:'',pct:0,active:false,scale:1};
 let tmr=null, running=false, curPh=0, curCt=0, curCy=0, totCy=6;
+
+// ══ HAPTICS ════════════════════════════════════════════════════════
+function haptic(pattern) {
+  try { if (navigator.vibrate) navigator.vibrate(pattern); } catch(e) {}
+}
 
 function pushMain() {
   document.getElementById('orbLabel').textContent = D.label;
@@ -977,13 +1307,58 @@ function orbScale(key, prog) {
 }
 
 // ══ ENGINE ═════════════════════════════════════════════════════════
+function startCountdown(cb) {
+  const overlay  = document.getElementById('countdownOverlay');
+  const numEl    = document.getElementById('countdownNum');
+  let count = 5;
+  function showCount(n) {
+    numEl.style.animation = 'none';
+    numEl.offsetHeight;
+    numEl.style.animation = 'countPop 0.5s cubic-bezier(0.22,1,0.36,1) both';
+    numEl.textContent = n;
+    countdownTone(n);
+  }
+  overlay.classList.add('show');
+  showCount(count);
+  const tick = () => {
+    count--;
+    if (count <= 0) {
+      overlay.classList.remove('show');
+      cb();
+      return;
+    }
+    showCount(count);
+    setTimeout(tick, 1000);
+  };
+  setTimeout(tick, 1000);
+}
+
+// ══ BREATHING TIPS TOGGLE ══════════════════════════════════════════
+document.getElementById('tipsToggle').addEventListener('click', () => {
+  const btn   = document.getElementById('tipsToggle');
+  const panel = document.getElementById('tipsPanel');
+  btn.classList.toggle('open');
+  panel.classList.toggle('open');
+});
+
+// ══ PRESET GUIDE TOGGLE ════════════════════════════════════════════
+document.getElementById('presetGuideToggle').addEventListener('click', () => {
+  const btn   = document.getElementById('presetGuideToggle');
+  const panel = document.getElementById('presetGuidePanel');
+  btn.classList.toggle('open');
+  panel.classList.toggle('open');
+});
+
 function startSession() {
   if (running) return;
-  running = true;
-  document.getElementById('btnStart').textContent = 'Running…';
+  document.getElementById('btnStart').textContent = 'Starting…';
   document.getElementById('btnStart').disabled = true;
-  totCy = durMode === 'mins' ? calcCycles() : +document.getElementById('durNum').value;
-  curCy = 0; nextCycle();
+  startCountdown(() => {
+    running = true;
+    document.getElementById('btnStart').textContent = 'Running…';
+    totCy = durMode === 'mins' ? calcCycles() : +document.getElementById('durNum').value;
+    curCy = 0; nextCycle();
+  });
 }
 function nextCycle() {
   if (!running) return;
@@ -997,6 +1372,11 @@ function nextPhase() {
   if (curPh >= PHASES.length) { nextCycle(); return; }
   const ph = PHASES[curPh];
   TONES[ph.key]?.();
+  // Haptic: short pulse for inhale/hold, longer for exhale
+  if (ph.key === 'inhale')      haptic([30]);
+  else if (ph.key === 'hold1')  haptic([15, 30, 15]);
+  else if (ph.key === 'exhale') haptic([60]);
+  else if (ph.key === 'hold2')  haptic([10]);
   curCt = v[ph.key];
   tick(ph, v[ph.key]);
 }
@@ -1017,15 +1397,33 @@ function finish() {
   focusOn = false;
   document.getElementById('focusOverlay').classList.remove('on');
   TONES.done(); celebrate();
+  haptic([40, 60, 40, 60, 80]);
   D = {label:'Done', num:'—', pip:-1, status:'', pct:100, active:false, scale:1};
   push();
   document.getElementById('btnStart').textContent = 'Begin';
   document.getElementById('btnStart').disabled = false;
+
+  // Record session & update streak
+  const streak = recordSession();
+  renderStreak();
+
+  // Populate post-session stats
+  const v = vals();
+  const cycleLen = v.inhale + v.hold1 + v.exhale + v.hold2 || 16;
+  const totalSecs = totCy * cycleLen;
+  const bpm = (60 / cycleLen).toFixed(1);
+  document.getElementById('affStatCycles').textContent = totCy;
+  document.getElementById('affStatMins').textContent   = (totalSecs / 60).toFixed(1);
+  document.getElementById('affStatBPM').textContent    = bpm;
+  document.getElementById('affStatReduction').innerHTML = Math.round(((17 - +bpm) / 17) * 100) + '<span style="font-size:1rem">%</span>';
+  document.getElementById('affStatStreak').textContent = streak.count;
+
   // show affirmation after the burst animation
   setTimeout(showAffirmation, 900);
 }
 function reset() {
   running = false; clearTimeout(tmr);
+  document.getElementById('countdownOverlay').classList.remove('show');
   D = {label:'Ready', num:'—', pip:-1, status:'', pct:0, active:false, scale:1};
   push();
   document.getElementById('btnStart').textContent = 'Begin';
@@ -1034,6 +1432,33 @@ function reset() {
 
 document.getElementById('btnStart').addEventListener('click', startSession);
 document.getElementById('btnReset').addEventListener('click', reset);
+
+// ══ KEYBOARD SHORTCUTS ═════════════════════════════════════════════
+document.addEventListener('keydown', (e) => {
+  // Don't fire when typing in inputs
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === ' ' || e.code === 'Space') {
+    e.preventDefault();
+    if (!running && document.getElementById('btnStart').textContent === 'Begin') startSession();
+    // Space doesn't pause mid-session (breathwork shouldn't be interrupted)
+  }
+  if ((e.key === 'r' || e.key === 'R') && !e.metaKey && !e.ctrlKey) {
+    reset();
+  }
+  if (e.key === 'f' || e.key === 'F') {
+    if (!focusOn) {
+      focusOn = true;
+      document.getElementById('focusOverlay').classList.add('on');
+      pushFS();
+    } else {
+      focusOn = false;
+      document.getElementById('focusOverlay').classList.remove('on');
+    }
+  }
+  if (e.key === 'm' || e.key === 'M') {
+    document.getElementById('soundStyleBtn').click();
+  }
+});
 
 // ══ IOS: PREVENT SCREEN SLEEP ══════════════════════════════════════
 // Strategy 1: Wake Lock API (Chrome/Edge + Safari 17+)
@@ -1073,29 +1498,8 @@ function stopSilentAudio() {
   silentNode = null;
 }
 
-// Hook into session start/finish
-document.getElementById('btnStart').addEventListener('click', () => {
-  requestWakeLock();
-  startSilentAudio();
-});
-// Stop silent audio when done/reset
-const _origFinish = finish;
-const _origReset = reset;
-// patch finish and reset to also stop silent audio
-document.getElementById('btnReset').addEventListener('click', stopSilentAudio);
-// finish() calls stopSilentAudio via the setTimeout path — handled by overriding below
-// We watch running state changes instead
-const _stopOnFinish = setInterval(() => {
-  if (!running && silentNode) stopSilentAudio();
-}, 2000);
-
-// ══ BREATHING TIPS TOGGLE ══════════════════════════════════════════
-document.getElementById('tipsToggle').addEventListener('click', () => {
-  const panel = document.getElementById('tipsPanel');
-  const btn   = document.getElementById('tipsToggle');
-  panel.classList.toggle('open');
-  btn.classList.toggle('open');
-});
+// Ho
+// Homepage wake lock re-request on visibility change already handled above.
 </script>
 </body>
 </html>
