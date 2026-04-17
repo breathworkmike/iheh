@@ -1357,6 +1357,8 @@ function startSession() {
     running = true;
     document.getElementById('btnStart').textContent = 'Running…';
     totCy = durMode === 'mins' ? calcCycles() : +document.getElementById('durNum').value;
+    requestWakeLock();
+    startSilentAudio();
     curCy = 0; nextCycle();
   });
 }
@@ -1393,6 +1395,7 @@ function tick(ph, total) {
 function finish() {
   running = false; clearTimeout(tmr);
   stopSilentAudio();
+  if (wakeLock) { try { wakeLock.release(); } catch(e) {} wakeLock = null; }
   // close focus mode if open
   focusOn = false;
   document.getElementById('focusOverlay').classList.remove('on');
@@ -1423,6 +1426,8 @@ function finish() {
 }
 function reset() {
   running = false; clearTimeout(tmr);
+  stopSilentAudio();
+  if (wakeLock) { try { wakeLock.release(); } catch(e) {} wakeLock = null; }
   document.getElementById('countdownOverlay').classList.remove('show');
   D = {label:'Ready', num:'—', pip:-1, status:'', pct:0, active:false, scale:1};
   push();
