@@ -169,6 +169,44 @@ body{
 .page-byline strong{font-weight:700;}
 .tagline{font-size:0.63rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);margin-top:1.2rem;margin-bottom:0.6rem;}
 
+/* PRESET DESC BAR */
+.preset-desc-bar{
+  min-height:1.6rem;
+  font-size:0.66rem;font-weight:400;
+  color:var(--muted);text-align:center;
+  letter-spacing:0.02em;line-height:1.5;
+  max-width:340px;
+  opacity:0;transform:translateY(4px);
+  transition:opacity 0.25s ease,transform 0.25s ease;
+  pointer-events:none;
+}
+.preset-desc-bar.visible{opacity:1;transform:translateY(0);}
+.preset-desc-pattern{
+  font-weight:600;color:var(--teal);
+  margin-right:0.35em;
+}
+
+/* RANDOM preset button */
+.preset-btn--random{
+  border-color:rgba(var(--pink-rgb,220,100,150),0.3);
+  color:rgba(var(--pink-rgb,220,100,150),0.7);
+}
+.preset-btn--random:hover{
+  background:rgba(var(--pink-rgb,220,100,150),0.08);
+  border-color:rgba(var(--pink-rgb,220,100,150),0.5);
+  color:rgb(var(--pink-rgb,220,100,150));
+}
+.preset-btn--random.active,.random-flash{
+  background:linear-gradient(135deg,rgba(var(--teal-rgb),0.18),rgba(var(--teal-rgb),0.08));
+  border-color:rgba(var(--teal-rgb),0.5);color:var(--teal);
+  box-shadow:0 2px 16px rgba(var(--teal-rgb),0.15);
+  animation:randomFlash 1.2s ease;
+}
+@keyframes randomFlash{
+  0%,100%{box-shadow:0 2px 16px rgba(var(--teal-rgb),0.15);}
+  40%{box-shadow:0 0 28px rgba(var(--teal-rgb),0.45);}
+}
+
 /* PRESETS */
 .presets{display:flex;gap:0.4rem;flex-wrap:wrap;justify-content:center;max-width:390px;}
 .preset-btn{
@@ -846,14 +884,17 @@ function toggleTheme() {
   </div>
 
   <div class="presets">
-    <button class="preset-btn active" data-preset="box">Box</button>
-    <button class="preset-btn" data-preset="478">4-7-8</button>
-    <button class="preset-btn" data-preset="physio">Physio Sigh</button>
-    <button class="preset-btn" data-preset="relax">Relax</button>
-    <button class="preset-btn" data-preset="coherence">Coherence</button>
-    <button class="preset-btn" data-preset="triangle">Triangle</button>
-    <button class="preset-btn preset-btn--test" data-preset="test">Test ⚡</button>
+    <button class="preset-btn active" data-preset="relax"   data-pattern="4-0-6-2" data-desc="Slow things down and let the body soften">Relax</button>
+    <button class="preset-btn"        data-preset="balance" data-pattern="5-0-5-0" data-desc="Find a steady, even rhythm between inhale and exhale">Balance</button>
+    <button class="preset-btn"        data-preset="letgo"   data-pattern="4-7-8-0" data-desc="Gently release tension with a longer, slower exhale">Let Go</button>
+    <button class="preset-btn"        data-preset="unwind"  data-pattern="4-4-8-0" data-desc="A gentle hold after the inhale, then twice the time to breathe it all away">Unwind</button>
+    <button class="preset-btn"        data-preset="focus"   data-pattern="4-4-4-4" data-desc="Keep your breath equal to steady the mind">Focus</button>
+    <button class="preset-btn"        data-preset="flow"    data-pattern="5-5-5-0" data-desc="Breathe in a smooth, continuous rhythm">Flow</button>
+    <button class="preset-btn preset-btn--random" data-preset="random" data-pattern="" data-desc="Let iheh choose a practice for you">Random ✦</button>
+    <button class="preset-btn preset-btn--test"   data-preset="test"   data-pattern="1-0-1-0" data-desc="Quick one-second cycles for testing">Test ⚡</button>
   </div>
+
+  <div class="preset-desc-bar" id="presetDescBar"></div>
 
   <div class="session-bar">
     <div class="session-bar-labels"><span>Progress</span><span id="progressLabel">—</span></div>
@@ -1103,16 +1144,6 @@ document.getElementById('introBtn').addEventListener('click', () => {
 });
 
 // ══ PRESETS ════════════════════════════════════════════════════════
-const PRESETS = {
-  box:       {i:4, h1:4, e:4, h2:4, c:6, m:5},
-  '478':     {i:4, h1:7, e:8, h2:0, c:4, m:5},
-  physio:    {i:5, h1:0, e:8, h2:0, c:5, m:5},
-  relax:     {i:4, h1:0, e:6, h2:2, c:8, m:8},
-  coherence: {i:5, h1:0, e:5, h2:0, c:6, m:5},
-  triangle:  {i:5, h1:5, e:5, h2:0, c:6, m:5},
-  test:      {i:1, h1:0, e:1, h2:0, c:3, m:1},
-};
-
 function secUnit(n) { return n === 1 ? 'second' : 'seconds'; }
 function setSlider(id, numId, unitId, v) {
   document.getElementById(id).value = v;
@@ -1120,28 +1151,77 @@ function setSlider(id, numId, unitId, v) {
   document.getElementById(unitId).textContent = secUnit(v);
 }
 
+const PRESETS = {
+  relax:   {i:4, h1:0, e:6, h2:2, c:8,  m:8},
+  balance: {i:5, h1:0, e:5, h2:0, c:6,  m:5},
+  letgo:   {i:4, h1:7, e:8, h2:0, c:4,  m:5},
+  unwind:  {i:4, h1:4, e:8, h2:0, c:6,  m:6},
+  focus:   {i:4, h1:4, e:4, h2:4, c:6,  m:5},
+  flow:    {i:5, h1:5, e:5, h2:0, c:6,  m:5},
+  test:    {i:1, h1:0, e:1, h2:0, c:3,  m:1},
+};
+const RANDOM_PRESETS = ['relax','balance','letgo','unwind','focus','flow'];
+
+function applyPreset(key) {
+  const p = PRESETS[key];
+  if (!p) return;
+  setSlider('sI','vI-num','vI-unit',p.i);
+  setSlider('sH1','vH1-num','vH1-unit',p.h1);
+  setSlider('sE','vE-num','vE-unit',p.e);
+  setSlider('sH2','vH2-num','vH2-unit',p.h2);
+  document.getElementById('durNum').value = durMode === 'cycles' ? p.c : p.m;
+  updateStats();
+}
+
+// Preset description bar
+const descBar = document.getElementById('presetDescBar');
+let descTimeout = null;
+
+function showDesc(pattern, desc) {
+  clearTimeout(descTimeout);
+  const patternHtml = pattern ? `<span class="preset-desc-pattern">${pattern}</span>` : '';
+  descBar.innerHTML = patternHtml + desc;
+  descBar.classList.add('visible');
+}
+function hideDesc() {
+  descTimeout = setTimeout(() => descBar.classList.remove('visible'), 800);
+}
+
 document.querySelectorAll('.preset-btn').forEach(b => {
+  // Hover (desktop)
+  b.addEventListener('mouseenter', () => showDesc(b.dataset.pattern, b.dataset.desc));
+  b.addEventListener('mouseleave', hideDesc);
+
+  // Tap (mobile)
   b.addEventListener('click', () => {
+    const key = b.dataset.preset;
+
+    if (key === 'random') {
+      const pick = RANDOM_PRESETS[Math.floor(Math.random() * RANDOM_PRESETS.length)];
+      document.querySelectorAll('.preset-btn').forEach(x => x.classList.remove('active'));
+      const chosenBtn = document.querySelector(`[data-preset="${pick}"]`);
+      chosenBtn.classList.add('active');
+      applyPreset(pick);
+      showDesc(chosenBtn.dataset.pattern, `✦ ${chosenBtn.textContent} — ${chosenBtn.dataset.desc}`);
+      chosenBtn.classList.add('random-flash');
+      setTimeout(() => chosenBtn.classList.remove('random-flash'), 1200);
+      return;
+    }
+
     document.querySelectorAll('.preset-btn').forEach(x => x.classList.remove('active'));
     b.classList.add('active');
-    const p = PRESETS[b.dataset.preset];
-    if (!p) return;
-    setSlider('sI','vI-num','vI-unit',p.i);
-    setSlider('sH1','vH1-num','vH1-unit',p.h1);
-    setSlider('sE','vE-num','vE-unit',p.e);
-    setSlider('sH2','vH2-num','vH2-unit',p.h2);
-    document.getElementById('durNum').value = durMode === 'cycles' ? p.c : p.m;
-    updateStats();
+    applyPreset(key);
+    showDesc(b.dataset.pattern, b.dataset.desc);
   });
 });
 
+// Slider changes → deactivate presets (custom)
 [['sI','vI-num','vI-unit'],['sH1','vH1-num','vH1-unit'],['sE','vE-num','vE-unit'],['sH2','vH2-num','vH2-unit']].forEach(([s,n,u]) => {
   document.getElementById(s).addEventListener('input', () => {
     const v = +document.getElementById(s).value;
     document.getElementById(n).textContent = v;
     document.getElementById(u).textContent = secUnit(v);
     document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('[data-preset="custom"]').classList.add('active');
     updateStats();
   });
 });
@@ -1167,6 +1247,10 @@ updateStats(); // initialise on load
 
 // ══ DURATION MODE ══════════════════════════════════════════════════
 let durMode = 'cycles';
+applyPreset('relax'); // set default — durMode now defined
+// Show default desc
+const defaultBtn = document.querySelector('[data-preset="relax"]');
+if (defaultBtn) showDesc(defaultBtn.dataset.pattern, defaultBtn.dataset.desc);
 document.querySelectorAll('.toggle-opt').forEach(b => {
   b.addEventListener('click', () => {
     document.querySelectorAll('.toggle-opt').forEach(x => x.classList.remove('active'));
